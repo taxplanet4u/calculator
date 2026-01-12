@@ -286,44 +286,74 @@
         }
         .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.05); }
         
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        /* [UPDATED] 버튼 그룹 스타일 - 모바일 대응 강화 */
+        .btn-group { 
+            display: flex; 
+            gap: 12px; 
+            margin-top: 20px; 
+        }
 
+        /* 상담 신청 버튼 (주요 행동) */
         .btn-consult-submit {
-            flex: 2;
-            padding: 18px;
+            flex: 2; /* 너비 비중을 더 크게 */
+            padding: 16px;
             background: linear-gradient(135deg, var(--primary), #1a4b8c);
             color: #fff;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 800;
+            border-radius: 12px; /* 살짝 덜 둥글게 해서 모던함 강조 */
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 4px 15px rgba(15, 44, 89, 0.3);
             animation: pulse-shadow 2s infinite;
         }
-        .btn-consult-submit:hover { transform: translateY(-2px); background: var(--primary-dark); }
+        .btn-consult-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 44, 89, 0.4);
+        }
 
+        /* 전화 문의 버튼 (보조 행동) - 세련된 아웃라인 스타일 */
         .btn-call {
             flex: 1;
-            padding: 18px;
+            padding: 16px;
             background: #fff;
             color: var(--primary);
-            border: 2px solid var(--primary);
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 800;
+            border: 2px solid var(--primary); /* 브랜드 컬러 테두리 */
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.2s ease;
             text-decoration: none; 
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 6px; /* 아이콘과 텍스트 간격 */
             box-sizing: border-box;
         }
-        .btn-call:hover { background: var(--bg-light); transform: translateY(-2px); }
+        .btn-call:hover {
+            background: var(--bg-light);
+            color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        /* 모바일 화면에서 버튼 배치 조정 */
+        @media (max-width: 480px) {
+            .btn-group {
+                flex-direction: column; /* 세로 배치 */
+                gap: 10px;
+            }
+            .btn-consult-submit, .btn-call {
+                width: 100%;
+                flex: none; /* flex 비율 무시 */
+                padding: 18px; /* 터치 영역 확보 */
+                font-size: 1.1rem;
+            }
+        }
 
         @keyframes pulse-shadow {
             0% { box-shadow: 0 0 0 0 rgba(15, 44, 89, 0.4); }
@@ -525,7 +555,9 @@
                 
                 <div class="btn-group">
                     <button onclick="sendEmail()" class="btn-consult-submit">상담신청하기</button>
-                    <a href="tel:010-6502-5820" class="btn-call">📞 전화 문의</a>
+                    <a href="tel:010-6502-5820" class="btn-call">
+                        <span>📞</span> 전화 문의
+                    </a>
                 </div>
             </div>
         </div>
