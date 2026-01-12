@@ -3,47 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>택스플래닛 - 2026 통합 세금 계산기</title>
     
-    <title>2026년 통합 세무 계산기 - 종합소득세·실수령액·4대보험 (택스플래닛)</title>
-    <meta name="description" content="2026년 최신 개정 세법 및 요율 반영! 종합소득세 미리계산부터 4대보험 공제액, 월급 실수령액까지 한 번에 확인하세요. 소영록 세무사의 정확한 계산 도구.">
-    <meta name="keywords" content="종합소득세 계산기, 4대보험 계산기, 실수령액 계산기, 2026 연봉계산기, 종소세 계산기, 월급 계산기, 세무사 소영록, 택스플래닛">
-    <link rel="canonical" href="https://www.company.or.kr">
-
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="2026년 종합소득세·실수령액·4대보험 통합 계산기">
-    <meta property="og:description" content="복잡한 세금과 보험료, 최신 요율로 미리 계산하고 절세 전략을 확인하세요.">
-    <meta property="og:image" content="https://www.company.or.kr/og-image.jpg">
-    <meta property="og:url" content="https://www.company.or.kr">
-    <meta property="og:site_name" content="택스플래닛">
-
-    <meta name="naver-site-verification" content="90223b01472b5ebc9047381569754ec089e8c6c6" />
-    
-    <meta name="google-site-verification" content="dMmbMh7h81U_92HMBKq-UnU41dGSqNrEF98Rvcfp0Ws" />
-
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "2026년 통합 세무 계산기",
-      "url": "https://www.company.or.kr",
-      "description": "최신 개정 세법 및 4대보험 요율을 반영한 통합 모의 계산 도구입니다.",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "All",
-      "featureList": ["종합소득세 계산", "4대보험 계산", "실수령액 계산"],
-      "author": {
-        "@type": "Person",
-        "name": "소영록 세무사"
-      }
-    }
-    </script>
+    <meta name="naver-site-verification" content="3acba8033f1a72030d581730550bc325a396826e" />
 
     <style>
         :root {
             /* 브랜드 컬러: 신뢰의 네이비 & 고급스러운 골드 베이지 */
-            --primary: #0f2c59;     
+            --primary: #0f2c59;    
             --primary-dark: #081b39;
             --secondary: #dac0a3;
-            --secondary-light: #fdfbf7;   
+            --secondary-light: #fdfbf7;  
             --bg-light: #f8f9fa;
             --white: #ffffff;
             --text-main: #333333;
@@ -106,7 +76,7 @@
             text-align: center;
             margin-bottom: 2rem;
         }
-        .page-title h1 { /* SEO 최적화를 위해 h1 태그로 유지 */
+        .page-title h2 {
             font-size: 1.8rem;
             color: var(--primary-dark);
             font-weight: 700;
@@ -203,6 +173,33 @@
         }
         .unit { margin-left: 10px; color: #999; font-size: 0.9rem; font-weight: 500;}
 
+        /* [계산 모드 스위치 (세전/세후)] */
+        .calc-mode-switch {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: #f0f4ff;
+            border-radius: 12px;
+            padding: 5px;
+        }
+        .mode-label {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #666;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .mode-radio { display: none; }
+        .mode-radio:checked + .mode-label {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(15, 44, 89, 0.2);
+        }
+
         /* [버튼] */
         .btn-calc {
             width: 100%;
@@ -275,7 +272,7 @@
         .consult-badge {
             display: inline-block;
             background: var(--secondary); 
-            color: var(--primary-dark);    
+            color: var(--primary-dark);   
             padding: 6px 18px;
             border-radius: 20px;
             font-size: 0.85rem;
@@ -317,11 +314,7 @@
         .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.05); }
         
         /* 버튼 그룹 */
-        .btn-group { 
-            display: flex; 
-            gap: 12px; 
-            margin-top: 20px; 
-        }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
 
         .btn-consult-submit {
             flex: 2;
@@ -337,13 +330,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(15, 44, 89, 0.3);
             animation: pulse-shadow 2s infinite;
         }
-        .btn-consult-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(15, 44, 89, 0.4);
-        }
+        .btn-consult-submit:hover { transform: translateY(-2px); background: var(--primary-dark); }
 
         .btn-call {
             flex: 1;
@@ -363,11 +352,7 @@
             gap: 6px;
             box-sizing: border-box;
         }
-        .btn-call:hover {
-            background: var(--bg-light);
-            color: var(--primary-dark);
-            border-color: var(--primary-dark);
-        }
+        .btn-call:hover { background: var(--bg-light); color: var(--primary-dark); border-color: var(--primary-dark); }
 
         @media (max-width: 480px) {
             .btn-group { flex-direction: column; gap: 10px; }
@@ -414,14 +399,14 @@
     <div class="container">
         
         <div class="page-title">
-            <h1>2026년 통합 세무계산기</h1>
-            <p>종합소득세부터 실수령액, 4대보험까지 완벽 반영</p>
+            <h2>택스플래닛 통합 세금 계산기</h2>
+            <p>2026년 개정 세법 및 간이세액표 완벽 반영</p>
         </div>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('comprehensive')">종합소득세 계산기</button>
+            <button class="tab-btn active" onclick="switchTab('comprehensive')">종합소득세 (사업)</button>
             <button class="tab-btn" onclick="switchTab('multi-work')">복수 근로소득</button>
-            <button class="tab-btn" onclick="switchTab('salary')">💰 실수령액·4대보험</button>
+            <button class="tab-btn" onclick="switchTab('salary')">💰 급여 실수령액</button>
         </div>
 
         <div id="tab-comprehensive">
@@ -483,14 +468,24 @@
 
         <div id="tab-salary" class="hidden">
             <div class="card">
-                <div class="section-header"><span class="section-title">2026년 실수령액 및 4대보험 계산</span></div>
+                <div class="section-header"><span class="section-title">2026년 급여 계산</span></div>
+                
+                <div class="calc-mode-switch">
+                    <input type="radio" name="calcMode" id="mode-gross" class="mode-radio" checked onchange="toggleSalaryMode()">
+                    <label for="mode-gross" class="mode-label">세전 → 세후</label>
+                    
+                    <input type="radio" name="calcMode" id="mode-net" class="mode-radio" onchange="toggleSalaryMode()">
+                    <label for="mode-net" class="mode-label">세후 → 세전 (역산)</label>
+                </div>
+
                 <div class="input-group">
-                    <div class="label-row"><span class="input-label">월 급여액 (세전)</span></div>
+                    <div class="label-row"><span class="input-label" id="salary-label">월 급여액 (세전)</span></div>
                     <div class="input-box">
                         <input type="text" id="salary-monthly" class="input-field" placeholder="0" onkeyup="formatNumber(this)">
                         <span class="unit">원</span>
                     </div>
                 </div>
+                
                 <div class="input-group">
                     <div class="label-row"><span class="input-label">비과세 식대</span><span class="input-desc">월 최대 20만원</span></div>
                     <div class="input-box">
@@ -498,6 +493,7 @@
                         <span class="unit">원</span>
                     </div>
                 </div>
+                
                 <div class="input-group">
                     <div class="label-row"><span class="input-label">자가운전보조금</span><span class="input-desc">월 최대 20만원</span></div>
                     <div class="input-box">
@@ -505,6 +501,7 @@
                         <span class="unit">원</span>
                     </div>
                 </div>
+
                 <div class="input-group">
                     <div class="label-row"><span class="input-label">부양가족 수 (본인포함)</span><span class="input-desc">간이세액표 기준</span></div>
                     <div class="input-box">
@@ -520,7 +517,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn-calc" onclick="calculateSalary2026()">실수령액·4대보험 계산하기 (2026)</button>
+            <button class="btn-calc" onclick="calculateSalary2026()">계산하기 (2026 기준)</button>
         </div>
 
         <div id="result-area" class="result-box">
@@ -545,6 +542,7 @@
                 </div>
 
                 <div style="border-top: 1px dashed #e0e0e0; margin: 1.5rem 0;"></div>
+
                 <div id="result-content"></div>
 
                 <div style="margin-top: 2rem; text-align: center; font-size: 0.8rem; color: #ccc;">
@@ -561,16 +559,19 @@
                 <h3>계산된 세금이 너무 많아서<br>고민이신가요?</h3>
                 <p>소영록 세무사가 <strong>직접</strong> 상황에 맞는<br>최적의 절세 전략을 안내해 드립니다.</p>
             </div>
+            
             <div class="consult-form">
                 <input type="text" id="consult-name" class="form-input" placeholder="성함 (예: 홍길동)">
                 <input type="text" id="consult-phone" class="form-input" placeholder="연락처 (예: 010-0000-0000)">
                 <textarea id="consult-msg" class="form-textarea" placeholder="상담하고 싶은 내용을 간략하게 적어주세요. (예: 프리랜서 종합소득세 신고 관련)"></textarea>
+                
                 <div class="btn-group">
                     <button onclick="sendEmail()" class="btn-consult-submit">상담신청하기</button>
                     <a href="tel:010-6502-5820" class="btn-call"><span>📞</span> 전화 문의</a>
                 </div>
             </div>
         </div>
+
     </div>
 
     <footer>
@@ -589,14 +590,32 @@
         // 탭 전환
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            
             if (tabId === 'comprehensive') document.querySelectorAll('.tab-btn')[0].classList.add('active');
             else if (tabId === 'multi-work') document.querySelectorAll('.tab-btn')[1].classList.add('active');
             else document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            
             document.getElementById('tab-comprehensive').classList.add('hidden');
             document.getElementById('tab-multi-work').classList.add('hidden');
             document.getElementById('tab-salary').classList.add('hidden');
+            
             document.getElementById('tab-' + tabId).classList.remove('hidden');
             document.getElementById('result-area').style.display = 'none';
+        }
+
+        // 급여 계산 모드 토글 (세전 <-> 세후)
+        function toggleSalaryMode() {
+            const isNet = document.getElementById('mode-net').checked;
+            const label = document.getElementById('salary-label');
+            const input = document.getElementById('salary-monthly');
+            
+            if (isNet) {
+                label.innerText = "월 실수령액 (세후)";
+                input.placeholder = "통장에 찍히는 금액 입력";
+            } else {
+                label.innerText = "월 급여액 (세전)";
+                input.placeholder = "계약 연봉/12 입력";
+            }
         }
 
         // 숫자 포맷팅
@@ -609,15 +628,15 @@
             return el && el.value ? parseInt(el.value.replace(/,/g, '')) || 0 : 0;
         }
 
-        // 공통 로직: 기본세율 등 (2026 기준)
-        function getEarnedDed(salary) {
+        // --- [공통 로직: 기본세율 등] ---
+        function getEarnedDed(salary) { // 2026 근로소득공제
             if (salary <= 5000000) return salary * 0.7;
             if (salary <= 15000000) return 3500000 + (salary - 5000000) * 0.4;
             if (salary <= 45000000) return 7500000 + (salary - 15000000) * 0.15;
             if (salary <= 100000000) return 12000000 + (salary - 45000000) * 0.05;
-            return 14750000 + (salary - 100000000) * 0.02;
+            return 14750000 + (salary - 100000000) * 0.02; 
         }
-        function calcBasicTax(base) {
+        function calcBasicTax(base) { // 2026 소득세율
             let tax = 0, rate = 0, barPercent = 0;
             if (base <= 14000000) { tax = base * 0.06; rate = 6; barPercent = 10; }
             else if (base <= 50000000) { tax = base * 0.15 - 1260000; rate = 15; barPercent = 30; }
@@ -630,7 +649,7 @@
             return { tax, rate, barPercent };
         }
 
-        // 실행 1: 종합소득세
+        // --- [실행 1: 종합소득세] ---
         function calculateTax() {
             const bizInc = getNum('biz-income');
             const laborInc = getNum('labor-income');
@@ -644,60 +663,147 @@
             const taxRes = calcBasicTax(taxBase);
             let finalIncomeTax = Math.max(0, Math.floor(taxRes.tax) - getNum('tax-credit'));
             const localTax = Math.floor(finalIncomeTax * 0.1);
-            const prePaid = getNum('pre-paid-tax');
-            const totalPay = (finalIncomeTax + localTax) - prePaid;
+            const totalPay = (finalIncomeTax + localTax) - getNum('pre-paid-tax');
+
             renderResult(totalIncome, totalDed, taxBase, Math.floor(taxRes.tax), taxRes.rate, taxRes.barPercent, getNum('tax-credit'), finalIncomeTax, localTax, getNum('pre-paid-tax'), totalPay, "종합소득세");
         }
 
-        // 실행 2: 복수근로 합산 실행
+        // --- [실행 2: 복수 근로소득] ---
         function calculateMultiWork() {
             let totalSal = 0, totalPrePaid = 0;
             document.querySelectorAll('.wp-salary').forEach(el => totalSal += parseInt(el.value.replace(/,/g,'')||0));
             document.querySelectorAll('.wp-tax').forEach(el => totalPrePaid += parseInt(el.value.replace(/,/g,'')||0));
             if(totalSal === 0) { alert('급여를 입력해주세요.'); return; }
+
             const earnedDed = getEarnedDed(totalSal);
             const laborInc = totalSal - earnedDed;
             const peopleDed = getNum('mw-people') * 1500000;
             let taxBase = Math.max(0, laborInc - peopleDed);
             const taxRes = calcBasicTax(taxBase);
-            let finalIncomeTax = Math.max(0, Math.floor(taxRes.tax) - 70000); 
+            let finalIncomeTax = Math.max(0, Math.floor(taxRes.tax) - 70000); // 표준공제 가정
             const localTax = Math.floor(finalIncomeTax * 0.1);
             const totalPay = (finalIncomeTax + localTax) - totalPrePaid;
+
             renderResult(laborInc, peopleDed, taxBase, Math.floor(taxRes.tax), taxRes.rate, taxRes.barPercent, 70000, finalIncomeTax, localTax, totalPrePaid, totalPay, "합산 신고 세액");
         }
 
-        // 실행 3: 실수령액 및 4대보험 실행
+        // --- [실행 3: 급여 실수령액 (정방향 + 역산)] ---
         function calculateSalary2026() {
-            const monthlySal = getNum('salary-monthly');
-            const nonTax = getNum('salary-meal') + getNum('salary-driving');
+            const inputVal = getNum('salary-monthly');
+            const meal = getNum('salary-meal');
+            const driving = getNum('salary-driving');
+            const nonTax = meal + driving;
             const dependents = getNum('salary-dependents'); 
-            const children = getNum('salary-children');
-            if(monthlySal === 0) { alert("월 급여액을 입력해주세요."); return; }
-            const taxableMonthly = monthlySal - nonTax;
-            if(taxableMonthly < 1060000) { renderSalaryResult(monthlySal, monthlySal, 0, 0, 0, 0, 0, 0, 0); return; }
-            const pension = Math.floor(Math.min(taxableMonthly, 6370000) * 0.0475 / 10) * 10;
+            const children = getNum('salary-children');     
+            
+            if(inputVal === 0) { alert("금액을 입력해주세요."); return; }
+
+            const isNetCalc = document.getElementById('mode-net').checked; // 역산 모드 확인
+
+            if (isNetCalc) {
+                // [역산] 세후 -> 세전 찾기 (Binary Search)
+                const targetNet = inputVal;
+                let low = targetNet; 
+                let high = targetNet * 2; // 대략 2배 범위 내에서 탐색
+                let foundGross = 0;
+                let calcRes = {};
+
+                // 20번 반복으로 근사값 찾기 (오차범위 줄임)
+                for(let i=0; i<30; i++) {
+                    let mid = Math.floor((low + high) / 2);
+                    calcRes = calcDeductions(mid, nonTax, dependents, children);
+                    
+                    if (calcRes.netPay === targetNet) {
+                        foundGross = mid;
+                        break;
+                    } else if (calcRes.netPay < targetNet) {
+                        low = mid + 1;
+                    } else {
+                        high = mid - 1;
+                    }
+                    foundGross = mid;
+                }
+                
+                // 최종 결과로 다시 한 번 계산해서 표시
+                const finalRes = calcDeductions(foundGross, nonTax, dependents, children);
+                renderSalaryResult(foundGross, finalRes.netPay, finalRes.pension, finalRes.health, finalRes.care, finalRes.employ, finalRes.incomeTax, finalRes.localTax, finalRes.totalDeduction);
+
+            } else {
+                // [정방향] 세전 -> 세후
+                const res = calcDeductions(inputVal, nonTax, dependents, children);
+                renderSalaryResult(inputVal, res.netPay, res.pension, res.health, res.care, res.employ, res.incomeTax, res.localTax, res.totalDeduction);
+            }
+        }
+
+        // [내부 계산 함수] 세전 급여 -> 공제액 및 세후 급여 산출
+        function calcDeductions(gross, nonTax, dependents, children) {
+            const taxableMonthly = gross - nonTax;
+            if(taxableMonthly < 0) return { netPay: gross, pension:0, health:0, care:0, employ:0, incomeTax:0, localTax:0, totalDeduction:0 };
+
+            // 4대보험
+            const pensionBase = Math.min(taxableMonthly, 6370000);
+            const pension = Math.floor(pensionBase * 0.0475 / 10) * 10;
             const health = Math.floor(taxableMonthly * 0.03595 / 10) * 10;
             const care = Math.floor(health * 0.1314 / 10) * 10;
             const employ = Math.floor(taxableMonthly * 0.009 / 10) * 10;
             const totalInsurance = pension + health + care + employ;
-            const annualSalary = taxableMonthly * 12;
-            const earnedDed = getEarnedDed(annualSalary);
-            const personalDed = dependents * 1500000;
-            let taxBase = Math.max(0, annualSalary - earnedDed - personalDed - (pension * 12) - 5000000);
-            const taxRes = calcBasicTax(taxBase);
-            let yearTax = Math.max(0, taxRes.tax - 700000 - (children * 150000));
-            const incomeTax = Math.floor(yearTax / 12 / 10) * 10;
+
+            // 소득세 (간이세액)
+            let incomeTax = 0;
+            if(taxableMonthly >= 1060000) {
+                const annualSalary = taxableMonthly * 12;
+                const earnedDed = getEarnedDed(annualSalary);
+                const personalDed = dependents * 1500000;
+                const pensionDed = pension * 12; 
+                
+                let specialDed = 0;
+                if (dependents === 1) {
+                    if (annualSalary <= 30000000) specialDed = 3100000 + annualSalary * 0.04;
+                    else if (annualSalary <= 45000000) specialDed = 3100000 + (30000000 * 0.04) + (annualSalary - 30000000) * 0.04; 
+                    else specialDed = 3100000 + (30000000 * 0.04) + (15000000 * 0.04) + (annualSalary - 45000000) * 0.015;
+                } else if (dependents === 2) {
+                    specialDed = 3600000 + (annualSalary > 30000000 ? (annualSalary - 30000000) * 0.04 : 0);
+                } else {
+                    specialDed = 5000000 + (annualSalary > 70000000 ? (annualSalary - 70000000) * 0.02 : 0);
+                }
+                
+                let taxBase = Math.max(0, annualSalary - earnedDed - personalDed - pensionDed - specialDed);
+                let calcTax = calcBasicTax(taxBase).tax;
+                
+                let credit = 0;
+                if (calcTax <= 1300000) credit = calcTax * 0.55;
+                else credit = 715000 + (calcTax - 1300000) * 0.3;
+                let creditLimit = 740000;
+                if (annualSalary > 70000000) creditLimit = 660000;
+                if (annualSalary > 120000000) creditLimit = 500000;
+                credit = Math.min(credit, creditLimit);
+                
+                let yearTax = calcTax - credit;
+                let childCredit = 0;
+                if (children >= 1) childCredit += 150000;
+                if (children >= 2) childCredit += 150000; 
+                if (children >= 3) childCredit += (children - 2) * 300000;
+                
+                yearTax = Math.max(0, yearTax - childCredit);
+                incomeTax = Math.floor(yearTax / 12 / 10) * 10;
+            }
+            
             const localTax = Math.floor(incomeTax * 0.1 / 10) * 10;
             const totalDeduction = totalInsurance + incomeTax + localTax;
-            renderSalaryResult(monthlySal, monthlySal - totalDeduction, pension, health, care, employ, incomeTax, localTax, totalDeduction);
+            const netPay = gross - totalDeduction;
+
+            return { netPay, pension, health, care, employ, incomeTax, localTax, totalDeduction };
         }
 
-        // 렌더링 함수들
+        // --- [렌더링 함수들] ---
+        
         function renderResult(inc, ded, base, cTax, rate, barP, credit, fTax, lTax, pre, total, typeTitle) {
             document.getElementById('result-area').style.display = 'block';
             document.getElementById('tax-graph-area').style.display = 'block'; 
+            
             document.getElementById('res-title-text').innerText = "최종 납부(환급) 예상세액";
             const totalEl = document.getElementById('res-total-pay');
+            
             if (total > 0) {
                 totalEl.innerText = total.toLocaleString() + " 원";
                 totalEl.style.color = "#e03e2d"; 
@@ -709,9 +815,22 @@
                 document.getElementById('res-badge').className = "badge refund";
                 document.getElementById('res-badge').innerText = "환급 예상";
             }
+
             document.getElementById('rate-bubble').innerText = `세율 ${rate}%`;
             setTimeout(() => { document.getElementById('rate-bar').style.width = barP + "%"; }, 300);
-            const html = `<div class="row"><span>총 소득금액</span><span>${inc.toLocaleString()} 원</span></div><div class="row"><span>(-) 소득공제 계</span><span style="color:#007bc7;">${ded.toLocaleString()} 원</span></div><div class="row highlight"><span>(=) 과세표준</span><span>${base.toLocaleString()} 원</span></div><div class="row" style="font-size:0.85rem; color:#999; margin-bottom:15px;"><span>적용세율 ${rate}%</span><span>산출세액 ${cTax.toLocaleString()}</span></div><div class="row"><span>(-) 세액공제/감면</span><span style="color:#007bc7;">${credit.toLocaleString()} 원</span></div><div class="row highlight"><span>(=) 결정세액</span><span>${fTax.toLocaleString()} 원</span></div><div class="row"><span>(+) 지방소득세(10%)</span><span>${lTax.toLocaleString()} 원</span></div><div class="row"><span>(-) 기납부세액</span><span style="color:#888;">${pre.toLocaleString()} 원</span></div>`;
+
+            const html = `
+                <div class="row"><span>총 소득금액</span><span>${inc.toLocaleString()} 원</span></div>
+                <div class="row"><span>(-) 소득공제 계</span><span style="color:#007bc7;">${ded.toLocaleString()} 원</span></div>
+                <div class="row highlight"><span>(=) 과세표준</span><span>${base.toLocaleString()} 원</span></div>
+                <div class="row" style="font-size:0.85rem; color:#999; margin-bottom:15px;">
+                    <span>적용세율 ${rate}%</span><span>산출세액 ${cTax.toLocaleString()}</span>
+                </div>
+                <div class="row"><span>(-) 세액공제/감면</span><span style="color:#007bc7;">${credit.toLocaleString()} 원</span></div>
+                <div class="row highlight"><span>(=) 결정세액</span><span>${fTax.toLocaleString()} 원</span></div>
+                <div class="row"><span>(+) 지방소득세(10%)</span><span>${lTax.toLocaleString()} 원</span></div>
+                <div class="row"><span>(-) 기납부세액</span><span style="color:#888;">${pre.toLocaleString()} 원</span></div>
+            `;
             document.getElementById('result-content').innerHTML = html;
             document.getElementById('result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -719,13 +838,35 @@
         function renderSalaryResult(gross, net, pension, health, care, employ, income, local, totalDed) {
             document.getElementById('result-area').style.display = 'block';
             document.getElementById('tax-graph-area').style.display = 'none'; 
-            document.getElementById('res-title-text').innerText = "예상 월 실수령액 (2026)";
+            
+            // 역산일 경우 텍스트 변경
+            const isNetCalc = document.getElementById('mode-net').checked;
+            document.getElementById('res-title-text').innerText = isNetCalc ? "역산된 월 세전 급여 (2026)" : "예상 월 실수령액 (2026)";
+            
             const totalEl = document.getElementById('res-total-pay');
-            totalEl.innerText = net.toLocaleString() + " 원";
+            // 역산이면 '세전 급여'를 메인으로 보여줌
+            totalEl.innerText = isNetCalc ? gross.toLocaleString() + " 원" : net.toLocaleString() + " 원";
             totalEl.style.color = "#0f2c59"; 
+            
             document.getElementById('res-badge').className = "badge refund";
-            document.getElementById('res-badge').innerText = "지급 예상";
-            const html = `<div class="row highlight" style="margin-top:0;"><span>월 급여액(세전)</span><span>${gross.toLocaleString()} 원</span></div><div style="margin:15px 0; border-top:1px dashed #eee;"></div><div class="row"><strong>4대보험 공제 합계</strong><strong style="color:#e03e2d;">(-) ${totalDed.toLocaleString()} 원</strong></div><div class="row sub"><span>국민연금 (4.75%)</span><span>${pension.toLocaleString()} 원</span></div><div class="row sub"><span>건강보험 (3.595%)</span><span>${health.toLocaleString()} 원</span></div><div class="row sub"><span>장기요양 (13.14%)</span><span>${care.toLocaleString()} 원</span></div><div class="row sub"><span>고용보험 (0.9%)</span><span>${employ.toLocaleString()} 원</span></div><div class="row sub"><span>근로소득세 (간이세액)</span><span>${income.toLocaleString()} 원</span></div><div class="row sub"><span>지방소득세 (10%)</span><span>${local.toLocaleString()} 원</span></div>`;
+            document.getElementById('res-badge').innerText = isNetCalc ? "계약 금액" : "지급 예상";
+
+            const html = `
+                <div class="row highlight" style="margin-top:0;">
+                    <span>${isNetCalc ? '실수령액 (세후)' : '월 급여액 (세전)'}</span>
+                    <span>${isNetCalc ? net.toLocaleString() : gross.toLocaleString()} 원</span>
+                </div>
+                <div style="margin:15px 0; border-top:1px dashed #eee;"></div>
+                
+                <div class="row"><strong>공제 합계</strong><strong style="color:#e03e2d;">(-) ${totalDed.toLocaleString()} 원</strong></div>
+                
+                <div class="row sub"><span>국민연금 (4.75%)</span><span>${pension.toLocaleString()} 원</span></div>
+                <div class="row sub"><span>건강보험 (3.595%)</span><span>${health.toLocaleString()} 원</span></div>
+                <div class="row sub"><span>장기요양 (13.14%)</span><span>${care.toLocaleString()} 원</span></div>
+                <div class="row sub"><span>고용보험 (0.9%)</span><span>${employ.toLocaleString()} 원</span></div>
+                <div class="row sub"><span>근로소득세 (간이세액)</span><span>${income.toLocaleString()} 원</span></div>
+                <div class="row sub"><span>지방소득세 (10%)</span><span>${local.toLocaleString()} 원</span></div>
+            `;
             document.getElementById('result-content').innerHTML = html;
             document.getElementById('result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -734,8 +875,20 @@
         function addWorkplace() {
             wpCount++;
             const div = document.createElement('div');
-            div.className = 'workplace-item'; div.id = `wp-${wpCount}`;
-            div.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.9rem; font-weight:600; color:#444;"><span>직장 ${wpCount}</span><span style="color:#e03e2d; cursor:pointer;" onclick="document.getElementById('wp-${wpCount}').remove()">삭제</span></div><div class="input-box" style="margin-bottom:5px;"><input type="text" class="input-field wp-salary" placeholder="총급여액" onkeyup="formatNumber(this)"><span class="unit">원</span></div><div class="input-box"><input type="text" class="input-field wp-tax" placeholder="기납부세액" onkeyup="formatNumber(this)"><span class="unit">원</span></div>`;
+            div.className = 'workplace-item';
+            div.id = `wp-${wpCount}`;
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.9rem; font-weight:600; color:#444;">
+                    <span>직장 ${wpCount}</span>
+                    <span style="color:#e03e2d; cursor:pointer;" onclick="document.getElementById('wp-${wpCount}').remove()">삭제</span>
+                </div>
+                <div class="input-box" style="margin-bottom:5px;">
+                    <input type="text" class="input-field wp-salary" placeholder="총급여액" onkeyup="formatNumber(this)"><span class="unit">원</span>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field wp-tax" placeholder="기납부세액" onkeyup="formatNumber(this)"><span class="unit">원</span>
+                </div>
+            `;
             document.getElementById('workplace-list').appendChild(div);
         }
 
@@ -748,6 +901,7 @@
             const body = encodeURIComponent(`1. 성함 : ${name}\n2. 연락처 : ${phone}\n3. 상담 내용 :\n${msg}\n`);
             window.location.href = `mailto:ceo@taxplanet.kr?subject=${subject}&body=${body}`;
         }
+
         addWorkplace(); 
     </script>
 </body>
