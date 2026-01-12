@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>택스플래닛 - 종합소득세 계산기</title>
+
+    <meta name="naver-site-verification" content="3acba8033f1a72030d581730550bc325a396826e" />
+
+    <style>
+        :root {
+            /* 브랜드 컬러: 신뢰의 네이비 & 고급스러운 골드 베이지 */
+            --primary: #0f2c59;    
+            --primary-dark: #081b39;
+            --secondary: #dac0a3;
+            --secondary-light: #fdfbf7;  
+            --bg-light: #f8f9fa;
+            --white: #ffffff;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --border: #e0e0e0;
+            --accent: #2c3e50; 
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; font-family: 'Pretendard', -apple-system, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg-light); color: var(--text-main); line-height: 1.6; }
+
+        /* [헤더] */
+        header {
+            background: var(--white);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo span { color: var(--secondary); }
+        .header-contact {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .icon-phone { color: var(--primary); }
+
+        /* [메인 컨테이너] */
+        .container { 
+            max-width: 700px; 
+            margin: 2rem auto 4rem; 
+            padding: 0 1.2rem; 
+        }
+
+        /* [타이틀 섹션] */
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-title h2 {
+            font-size: 1.8rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .page-title p {
+            color: var(--text-sub);
+            font-size: 1rem;
+        }
+
+        /* [탭 메뉴] */
+        .tabs { 
+            display: flex; 
+            background: var(--white); 
+            padding: 6px; 
+            border-radius: 50px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            margin-bottom: 2rem; 
+            border: 1px solid var(--border);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: transparent;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-sub);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(15, 44, 89, 0.2);
+        }
+
+        /* [카드 스타일] */
+        .card { 
+            background: var(--white); 
+            padding: 2rem; 
+            border-radius: 16px; 
+            box-shadow: var(--shadow); 
+            margin-bottom: 1.5rem; 
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .section-header { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 1.5rem; 
+            padding-bottom: 10px; 
+            border-bottom: 2px solid var(--bg-light); 
+        }
+        .section-title { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            color: var(--primary); 
+        }
+
+        /* [입력 폼] */
+        .input-group { margin-bottom: 1.2rem; }
+        .label-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem; }
+        .input-label { font-size: 0.95rem; font-weight: 600; color: #444; }
+        .input-desc { font-size: 0.8rem; color: #888; font-weight: 400; }
+        
+        .input-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            padding: 0 15px;
+            transition: all 0.2s;
+            height: 52px;
+        }
+        .input-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.08);
+        }
+        .input-field {
+            flex: 1;
+            border: none;
+            outline: none;
+            text-align: right;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            width: 100%;
+            padding: 10px 0;
+            background: transparent;
+        }
+        .unit { margin-left: 10px; color: #999; font-size: 0.9rem; font-weight: 500;}
+
+        /* [버튼] */
+        .btn-calc {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(15, 44, 89, 0.25);
+            transition: transform 0.2s, background 0.2s;
+        }
+        .btn-calc:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* [결과 영수증] */
+        .result-box { display: none; margin-top: 2rem; animation: slideUp 0.6s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .receipt {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border-radius: 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-top: 6px solid var(--primary);
+        }
+        .receipt::after {
+            content: ""; position: absolute; bottom: -10px; left: 0; width: 100%; height: 20px;
+            background: radial-gradient(circle, transparent 70%, var(--white) 70%) 0 -10px;
+            background-size: 20px 20px;
+            transform: rotate(180deg);
+        }
+
+        .receipt-header { text-align: center; margin-bottom: 2rem; }
+        .total-amount { font-size: 2.4rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; margin: 10px 0; }
+        .badge { display: inline-block; padding: 6px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700; }
+        .badge.pay { background: #fff1f0; color: #e03e2d; }
+        .badge.refund { background: #f0f9ff; color: #007bc7; }
+
+        .row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; color: #555; }
+        .row.highlight { color: var(--text-main); font-weight: 700; font-size: 1.05rem; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee; }
+
+        /* [세율 그래프] */
+        .tax-bracket-container { margin: 2rem 0; padding: 1.5rem; background: var(--bg-light); border-radius: 12px; text-align: center; }
+        .bracket-bar { height: 12px; background: #e0e0e0; border-radius: 6px; position: relative; overflow: hidden; display: flex; margin-top: 10px;}
+        .bracket-segment { flex: 1; border-right: 2px solid #fff; }
+        .current-position { 
+            position: absolute; top: 0; left: 0; height: 100%; 
+            background: linear-gradient(90deg, var(--secondary), var(--primary)); 
+            width: 0%; transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1); 
+        }
+
+        /* [상담 신청 섹션] */
+        .consult-section {
+            margin-top: 4rem;
+            background: linear-gradient(145deg, #ffffff, #fdfbf7);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 15px 40px rgba(15, 44, 89, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .consult-section:hover { transform: translateY(-5px); }
+        
+        .consult-badge {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--primary-dark);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(218, 192, 163, 0.4);
+        }
+
+        .consult-title { text-align: center; margin-bottom: 2rem; }
+        .consult-title h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .consult-title p { color: #555; font-size: 1rem; line-height: 1.6; }
+        
+        .consult-form { display: flex; flex-direction: column; gap: 15px; }
+        .form-input {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #fff;
+            transition: 0.2s;
+        }
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.05); }
+        .form-textarea {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            height: 120px;
+            resize: none;
+            background: #fff;
+            transition: 0.2s;
+        }
+        .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.05); }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-consult-submit {
+            flex: 2;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), #1a4b8c);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse-shadow 2s infinite;
+        }
+        .btn-consult-submit:hover {
+            transform: translateY(-2px);
+            background: var(--primary-dark);
+        }
+
+        .btn-call {
+            flex: 1;
+            padding: 18px;
+            background: #fff;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+        .btn-call:hover {
+            background: var(--bg-light);
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse-shadow {
+            0% { box-shadow: 0 0 0 0 rgba(15, 44, 89, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(15, 44, 89, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(15, 44, 89, 0); }
+        }
+
+        /* [푸터] */
+        footer {
+            background: var(--primary-dark);
+            color: rgba(255,255,255,0.7);
+            padding: 3rem 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+        .footer-logo { font-weight: 700; color: var(--white); font-size: 1.1rem; margin-bottom: 10px; }
+        .footer-info p { margin-bottom: 5px; }
+        .footer-tel { font-size: 1.2rem; color: var(--secondary); font-weight: 700; margin-top: 10px; display: block; }
+
+        .hidden { display: none; }
+        
+        .btn-add { width: 100%; padding: 1rem; border: 2px dashed #ccc; background: transparent; color: #666; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .btn-add:hover { border-color: var(--primary); color: var(--primary); background: #f0f4ff; }
+        .workplace-item { background: var(--bg-light); padding: 1rem; border-radius: 8px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-inner">
+            <a href="#" class="logo">택스플래닛세무회계 <span>.</span></a>
+            <div class="header-contact">
+                <span class="icon-phone">📞</span> 010-6502-5820
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <div class="page-title">
+            <h2>택스플래닛 종합소득세 계산기</h2>
+            <p>복잡한 세금 계산, 전문가의 로직으로 쉽고 정확하게</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('comprehensive')">종합소득세 (사업/프리랜서)</button>
+            <button class="tab-btn" onclick="switchTab('multi-work')">복수 근로소득 (이직/N잡)</button>
+        </div>
+
+        <div id="tab-comprehensive">
+            <div class="card">
+                <div class="section-header"><span class="section-title">01. 소득 정보 입력</span></div>
+                
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">사업소득금액</span><span class="input-desc">총수입 - 필요경비</span></div>
+                    <div class="input-box">
+                        <input type="text" id="biz-income" class="input-field" placeholder="0" onkeyup="formatNumber(this)">
+                        <span class="unit">원</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">근로소득금액</span><span class="input-desc">근로소득공제 후 금액</span></div>
+                    <div class="input-box">
+                        <input type="text" id="labor-income" class="input-field" placeholder="0" onkeyup="formatNumber(this)">
+                        <span class="unit">원</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">기타/금융 소득금액</span></div>
+                    <div class="input-box">
+                        <input type="text" id="other-income" class="input-field" placeholder="0" onkeyup="formatNumber(this)">
+                        <span class="unit">원</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="section-header"><span class="section-title">02. 공제 및 기납부 정보</span></div>
+
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">부양가족 수 (본인포함)</span></div>
+                    <div class="input-box">
+                        <input type="number" id="people-count" class="input-field" value="1" min="1" style="text-align: left;">
+                        <span class="unit">명</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">노란우산공제 납입액</span><span class="input-desc" style="color:var(--primary);">*한도 자동적용</span></div>
+                    <div class="input-box">
+                        <input type="text" id="yellow-amount" class="input-field" placeholder="0" onkeyup="formatNumber(this)">
+                        <span class="unit">원</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">기타 소득공제 (연금 등)</span></div>
+                    <div class="input-box">
+                        <input type="text" id="etc-deduction" class="input-field" placeholder="0" onkeyup="formatNumber(this)">
+                        <span class="unit">원</span>
+                    </div>
+                </div>
+                
+                <div style="margin: 1.5rem 0; border-top: 1px dashed #e0e0e0;"></div>
+
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">세액공제 합계</span><span class="input-desc">자녀/표준/연금계좌 등</span></div>
+                    <div class="input-box">
+                        <input type="text" id="tax-credit" class="input-field" placeholder="표준공제 70,000" onkeyup="formatNumber(this)">
+                        <span class="unit">원</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="label-row"><span class="input-label">기납부세액</span><span class="input-desc">3.3% 또는 원천징수액</span></div>
+                    <div class="input-box">
+                        <input type="text" id="pre-paid-tax" class="input-field" placeholder="0" onkeyup="formatNumber(this)">
+                        <span class="unit">원</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-calc" onclick="calculateTax()">내 예상 세액 확인하기</button>
+        </div>
+
+        <div id="tab-multi-work" class="hidden">
+            <div class="card">
+                <div class="section-header"><span class="section-title">근무지별 소득 정보</span></div>
+                <p style="font-size:0.9rem; color:#666; margin-bottom:1.5rem; background:#f0f4ff; padding:10px; border-radius:5px;">
+                    💡 원천징수영수증 상의 <strong>'총급여'</strong>와 <strong>'결정세액'</strong>을 입력해주세요.
+                </p>
+                
+                <div id="workplace-list"></div>
+                <button class="btn-add" onclick="addWorkplace()">+ 근무지 추가하기</button>
+
+                <div class="input-group" style="margin-top: 2rem;">
+                    <div class="label-row"><span class="input-label">인적공제 대상 수 (본인포함)</span></div>
+                    <div class="input-box">
+                        <input type="number" id="mw-people" class="input-field" value="1" style="text-align: left;">
+                        <span class="unit">명</span>
+                    </div>
+                </div>
+            </div>
+            <button class="btn-calc" onclick="calculateMultiWork()">합산 신고 세액 계산하기</button>
+        </div>
+
+        <div id="result-area" class="result-box">
+            <div class="receipt">
+                <div class="receipt-header">
+                    <div style="font-size:0.9rem; color:#888; margin-bottom:5px;">최종 납부(환급) 예상세액</div>
+                    <div id="res-total-pay" class="total-amount">0 원</div>
+                    <div id="res-badge" class="badge pay">납부 예상</div>
+                </div>
+
+                <div class="tax-bracket-container">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:5px;">
+                        <span style="font-size:0.85rem; font-weight:600; color:#555;">나의 과세표준 구간</span>
+                        <span id="rate-bubble" style="background:var(--primary); color:#fff; padding:2px 8px; border-radius:4px; font-size:0.8rem; font-weight:700;">세율 0%</span>
+                    </div>
+                    <div class="bracket-bar">
+                        <div class="current-position" id="rate-bar"></div>
+                        <div class="bracket-segment"></div> <div class="bracket-segment"></div> <div class="bracket-segment"></div> <div class="bracket-segment"></div> <div class="bracket-segment"></div> <div class="bracket-segment"></div> <div class="bracket-segment"></div> </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.7rem; color: #aaa;">
+                        <span>6%</span><span>15%</span><span>24%</span><span>35%</span><span>45%</span>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px dashed #e0e0e0; margin: 1.5rem 0;"></div>
+
+                <div class="row"><span>종합소득금액</span><span id="res-income">0 원</span></div>
+                <div class="row"><span>(-) 소득공제 계</span><span id="res-deduction" style="color:#007bc7;">0 원</span></div>
+                <div class="row highlight"><span>(=) 과세표준</span><span id="res-base">0 원</span></div>
+                <div class="row" style="font-size:0.85rem; color:#999; margin-bottom:15px;">
+                    <span>적용세율 <span id="res-rate">0%</span></span>
+                    <span>산출세액 <span id="res-calc-tax">0</span></span>
+                </div>
+
+                <div class="row"><span>(-) 세액공제/감면</span><span id="res-credit" style="color:#007bc7;">0 원</span></div>
+                <div class="row highlight"><span>(=) 결정세액</span><span id="res-final-income-tax">0 원</span></div>
+                <div class="row"><span>(+) 지방소득세(10%)</span><span id="res-local-tax">0 원</span></div>
+                <div class="row"><span>(-) 기납부세액</span><span id="res-pre-paid" style="color:#888;">0 원</span></div>
+
+                <div style="margin-top: 2rem; text-align: center; font-size: 0.8rem; color: #ccc;">
+                    본 계산 결과는 모의 계산이며 실제 신고 시 차이가 있을 수 있습니다.
+                </div>
+            </div>
+        </div>
+
+        <div class="consult-section">
+            <div style="text-align: center;">
+                <span class="consult-badge">무료절세상담</span>
+            </div>
+            <div class="consult-title">
+                <h3>계산된 세금이 너무 많아서<br>고민이신가요?</h3>
+                <p>소영록 세무사가 <strong>직접</strong> 상황에 맞는<br>최적의 절세 전략을 안내해 드립니다.</p>
+            </div>
+            
+            <div class="consult-form">
+                <input type="text" id="consult-name" class="form-input" placeholder="성함 (예: 홍길동)">
+                <input type="text" id="consult-phone" class="form-input" placeholder="연락처 (예: 010-0000-0000)">
+                <textarea id="consult-msg" class="form-textarea" placeholder="상담하고 싶은 내용을 간략하게 적어주세요. (예: 프리랜서 종합소득세 신고 관련)"></textarea>
+                
+                <div class="btn-group">
+                    <button onclick="sendEmail()" class="btn-consult-submit">
+                        상담신청하기
+                    </button>
+                    <a href="tel:010-6502-5820" class="btn-call">
+                        📞 전화 문의
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-logo">택스플래닛세무회계</div>
+        <div class="footer-info">
+            <p>대표 세무사: 소영록 | 사업자등록번호: 144-02-74164</p>
+            <p>주소: 서울특별시 강남구 논현로76길 16, 302호 (역삼동)</p>
+            <span class="footer-tel">Tel: 010-6502-5820</span>
+        </div>
+        <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.5;">
+            &copy; 2026 Tax Planet Tax Accounting. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        // 탭 전환
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if (tabId === 'comprehensive') document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            else document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            
+            document.getElementById('tab-comprehensive').classList.add('hidden');
+            document.getElementById('tab-multi-work').classList.add('hidden');
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('result-area').style.display = 'none';
+        }
+
+        // 숫자 포맷팅
+        function formatNumber(input) {
+            let val = input.value.replace(/[^0-9]/g, '');
+            input.value = val ? parseInt(val).toLocaleString() : '';
+        }
+        function getNum(id) {
+            const el = document.getElementById(id);
+            return el && el.value ? parseInt(el.value.replace(/,/g, '')) || 0 : 0;
+        }
+
+        // 로직 1: 노란우산공제 한도
+        function getYellowLimit(incomeAmount) {
+            if (incomeAmount <= 40000000) return 5000000;
+            if (incomeAmount <= 100000000) return 3000000;
+            return 2000000;
+        }
+
+        // 로직 2: 세율 계산
+        function calcBasicTax(base) {
+            let tax = 0, rate = 0, barPercent = 0;
+            if (base <= 14000000) { tax = base * 0.06; rate = 6; barPercent = 10; }
+            else if (base <= 50000000) { tax = base * 0.15 - 1260000; rate = 15; barPercent = 30; }
+            else if (base <= 88000000) { tax = base * 0.24 - 5760000; rate = 24; barPercent = 50; }
+            else if (base <= 150000000) { tax = base * 0.35 - 15440000; rate = 35; barPercent = 70; }
+            else if (base <= 300000000) { tax = base * 0.38 - 19940000; rate = 38; barPercent = 80; }
+            else if (base <= 500000000) { tax = base * 0.40 - 25940000; rate = 40; barPercent = 90; }
+            else if (base <= 1000000000) { tax = base * 0.42 - 35940000; rate = 42; barPercent = 95; }
+            else { tax = base * 0.45 - 65940000; rate = 45; barPercent = 100; }
+            return { tax, rate, barPercent };
+        }
+
+        // 로직 3: 근로소득공제
+        function getEarnedDed(salary) {
+            if (salary <= 5000000) return salary * 0.7;
+            if (salary <= 15000000) return 3500000 + (salary - 5000000) * 0.4;
+            if (salary <= 45000000) return 7500000 + (salary - 15000000) * 0.15;
+            if (salary <= 100000000) return 12000000 + (salary - 45000000) * 0.05;
+            return 14750000 + (salary - 100000000) * 0.02; 
+        }
+
+        // 실행 1: 종합소득세
+        function calculateTax() {
+            const bizInc = getNum('biz-income');
+            const laborInc = getNum('labor-income');
+            const otherInc = getNum('other-income');
+            const totalIncome = bizInc + laborInc + otherInc;
+
+            const peopleDed = getNum('people-count') * 1500000;
+            const yellowInput = getNum('yellow-amount');
+            const yellowDed = Math.min(yellowInput, getYellowLimit(bizInc));
+            const etcDed = getNum('etc-deduction');
+            const totalDed = peopleDed + yellowDed + etcDed; 
+
+            let taxBase = totalIncome - totalDed;
+            if (taxBase < 0) taxBase = 0;
+
+            const taxRes = calcBasicTax(taxBase);
+            const calcTax = Math.floor(taxRes.tax);
+            const credits = getNum('tax-credit');
+
+            let finalIncomeTax = calcTax - credits;
+            if (finalIncomeTax < 0) finalIncomeTax = 0;
+            const localTax = Math.floor(finalIncomeTax * 0.1);
+            const prePaid = getNum('pre-paid-tax');
+            const totalPay = (finalIncomeTax + localTax) - prePaid;
+
+            showResult(totalIncome, totalDed, taxBase, calcTax, taxRes.rate, taxRes.barPercent, credits, finalIncomeTax, localTax, prePaid, totalPay);
+        }
+
+        // 실행 2: 복수 근로소득
+        function calculateMultiWork() {
+            let totalSal = 0;
+            let totalPrePaid = 0;
+            document.querySelectorAll('.wp-salary').forEach(el => totalSal += parseInt(el.value.replace(/,/g,'')||0));
+            document.querySelectorAll('.wp-tax').forEach(el => totalPrePaid += parseInt(el.value.replace(/,/g,'')||0));
+
+            if(totalSal === 0) { alert('급여를 입력해주세요.'); return; }
+
+            const earnedDed = getEarnedDed(totalSal);
+            const laborInc = totalSal - earnedDed;
+            const peopleDed = getNum('mw-people') * 1500000;
+            
+            let taxBase = laborInc - peopleDed;
+            if(taxBase < 0) taxBase = 0;
+
+            const taxRes = calcBasicTax(taxBase);
+            const calcTax = Math.floor(taxRes.tax);
+            
+            const credits = 70000; 
+            let finalIncomeTax = calcTax - credits; 
+            if(finalIncomeTax < 0) finalIncomeTax = 0;
+
+            const localTax = Math.floor(finalIncomeTax * 0.1);
+            const totalPay = (finalIncomeTax + localTax) - totalPrePaid;
+
+            showResult(laborInc, peopleDed, taxBase, calcTax, taxRes.rate, taxRes.barPercent, credits, finalIncomeTax, localTax, totalPrePaid, totalPay);
+        }
+
+        function showResult(inc, ded, base, cTax, rate, barP, credit, fTax, lTax, pre, total) {
+            document.getElementById('result-area').style.display = 'block';
+            
+            document.getElementById('res-income').innerText = inc.toLocaleString() + " 원";
+            document.getElementById('res-deduction').innerText = ded.toLocaleString() + " 원";
+            document.getElementById('res-base').innerText = base.toLocaleString() + " 원";
+            document.getElementById('res-calc-tax').innerText = cTax.toLocaleString() + " 원";
+            document.getElementById('res-rate').innerText = rate + "%";
+            document.getElementById('res-credit').innerText = credit.toLocaleString() + " 원";
+            document.getElementById('res-final-income-tax').innerText = fTax.toLocaleString() + " 원";
+            document.getElementById('res-local-tax').innerText = lTax.toLocaleString() + " 원";
+            document.getElementById('res-pre-paid').innerText = pre.toLocaleString() + " 원";
+
+            const totalEl = document.getElementById('res-total-pay');
+            const badgeEl = document.getElementById('res-badge');
+            
+            if (total > 0) {
+                totalEl.innerText = total.toLocaleString() + " 원";
+                totalEl.style.color = "#e03e2d"; 
+                badgeEl.className = "badge pay";
+                badgeEl.innerText = "납부 예상";
+            } else {
+                totalEl.innerText = Math.abs(total).toLocaleString() + " 원";
+                totalEl.style.color = "#007bc7"; 
+                badgeEl.className = "badge refund";
+                badgeEl.innerText = "환급 예상";
+            }
+
+            document.getElementById('rate-bubble').innerText = `세율 ${rate}%`;
+            setTimeout(() => {
+                document.getElementById('rate-bar').style.width = barP + "%";
+            }, 300);
+
+            document.getElementById('result-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        let wpCount = 0;
+        function addWorkplace() {
+            wpCount++;
+            const div = document.createElement('div');
+            div.className = 'workplace-item';
+            div.id = `wp-${wpCount}`;
+            div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.9rem; font-weight:600; color:#444;">
+                    <span>직장 ${wpCount}</span>
+                    <span style="color:#e03e2d; cursor:pointer;" onclick="document.getElementById('wp-${wpCount}').remove()">삭제</span>
+                </div>
+                <div class="input-box" style="margin-bottom:5px;">
+                    <input type="text" class="input-field wp-salary" placeholder="총급여액" onkeyup="formatNumber(this)">
+                    <span class="unit">원</span>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field wp-tax" placeholder="기납부세액" onkeyup="formatNumber(this)">
+                    <span class="unit">원</span>
+                </div>
+            `;
+            document.getElementById('workplace-list').appendChild(div);
+        }
+
+        // [상담 신청 메일 발송 로직]
+        function sendEmail() {
+            const name = document.getElementById('consult-name').value;
+            const phone = document.getElementById('consult-phone').value;
+            const msg = document.getElementById('consult-msg').value;
+
+            if(!name || !phone) {
+                alert('성함과 연락처를 입력해주세요.');
+                return;
+            }
+
+            const subject = encodeURIComponent(`[택스플래닛] 세무 상담 신청합니다 (${name}님)`);
+            const body = encodeURIComponent(
+                `1. 성함 : ${name}\n` +
+                `2. 연락처 : ${phone}\n` +
+                `3. 상담 내용 :\n${msg}\n`
+            );
+
+            window.location.href = `mailto:ceo@taxplanet.kr?subject=${subject}&body=${body}`;
+        }
+
+        addWorkplace(); 
+    </script>
+</body>
+</html>
