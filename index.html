@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>2026 종합소득세·실수령액·4대보험 계산기 - 택스플래닛 (소영록 세무사)</title>
-    <meta name="description" content="2026년 개정 세법 완벽 반영! 종합소득세 미리계산부터 월급 실수령액, 4대보험 계산까지 한 번에 확인하세요. 소영록 세무사의 정확한 세무 계산 도구.">
-    <meta name="keywords" content="종합소득세 계산기, 실수령액 계산기, 4대보험 계산기, 2026년 연봉계산기, 종소세 계산, 월급 계산기, 세무사 소영록, 택스플래닛">
+    <title>2026년 통합 세무 계산기 - 종합소득세·실수령액·4대보험 (택스플래닛)</title>
+    <meta name="description" content="2026년 최신 개정 세법 및 요율 반영! 종합소득세 미리계산부터 4대보험 공제액, 월급 실수령액까지 한 번에 확인하세요. 소영록 세무사의 정확한 계산 도구.">
+    <meta name="keywords" content="종합소득세 계산기, 4대보험 계산기, 실수령액 계산기, 2026 연봉계산기, 종소세 계산기, 월급 계산기, 세무사 소영록, 택스플래닛">
     <link rel="canonical" href="https://www.company.or.kr">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="2026 택스플래닛 통합 세금 계산기">
-    <meta property="og:description" content="종합소득세, 실수령액, 4대보험 3초 만에 계산하기.">
+    <meta property="og:title" content="2026년 종합소득세·실수령액·4대보험 통합 계산기">
+    <meta property="og:description" content="복잡한 세금과 보험료, 최신 요율로 미리 계산하고 절세 전략을 확인하세요.">
     <meta property="og:image" content="https://www.company.or.kr/og-image.jpg">
     <meta property="og:url" content="https://www.company.or.kr">
     <meta property="og:site_name" content="택스플래닛">
@@ -22,12 +22,12 @@
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "택스플래닛 통합 세금 계산기",
+      "name": "2026년 통합 세무 계산기",
       "url": "https://www.company.or.kr",
-      "description": "종합소득세, 4대보험, 월급 실수령액을 최신 세법에 맞춰 계산해주는 도구입니다.",
+      "description": "최신 개정 세법 및 4대보험 요율을 반영한 통합 모의 계산 도구입니다.",
       "applicationCategory": "BusinessApplication",
       "operatingSystem": "All",
-      "featureList": ["종합소득세 계산", "실수령액 계산", "4대보험 요율 반영"],
+      "featureList": ["종합소득세 계산", "4대보험 계산", "실수령액 계산"],
       "author": {
         "@type": "Person",
         "name": "소영록 세무사"
@@ -314,7 +314,6 @@
         }
         .form-textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.05); }
         
-        /* 버튼 그룹 */
         .btn-group { 
             display: flex; 
             gap: 12px; 
@@ -412,8 +411,7 @@
     <div class="container">
         
         <div class="page-title">
-            <h1>2026 통합 세무 계산기</h1>
-            <p>종합소득세부터 실수령액, 4대보험까지 완벽 반영</p>
+            <h1>2026년 통합 세무계산기</h1> <p>종합소득세부터 실수령액, 4대보험까지 완벽 반영</p>
         </div>
 
         <div class="tabs">
@@ -628,7 +626,7 @@
             return { tax, rate, barPercent };
         }
 
-        // 종합소득세 실행
+        // 실행 1: 종합소득세
         function calculateTax() {
             const bizInc = getNum('biz-income');
             const laborInc = getNum('labor-income');
@@ -647,7 +645,7 @@
             renderResult(totalIncome, totalDed, taxBase, Math.floor(taxRes.tax), taxRes.rate, taxRes.barPercent, getNum('tax-credit'), finalIncomeTax, localTax, getNum('pre-paid-tax'), totalPay, "종합소득세");
         }
 
-        // 복수근로 합산 실행
+        // 실행 2: 복수근로 합산 실행
         function calculateMultiWork() {
             let totalSal = 0, totalPrePaid = 0;
             document.querySelectorAll('.wp-salary').forEach(el => totalSal += parseInt(el.value.replace(/,/g,'')||0));
@@ -664,7 +662,7 @@
             renderResult(laborInc, peopleDed, taxBase, Math.floor(taxRes.tax), taxRes.rate, taxRes.barPercent, 70000, finalIncomeTax, localTax, totalPrePaid, totalPay, "합산 신고 세액");
         }
 
-        // 실수령액 및 4대보험 실행
+        // 실행 3: 실수령액 및 4대보험 실행
         function calculateSalary2026() {
             const monthlySal = getNum('salary-monthly');
             const nonTax = getNum('salary-meal') + getNum('salary-driving');
@@ -690,7 +688,7 @@
             renderSalaryResult(monthlySal, monthlySal - totalDeduction, pension, health, care, employ, incomeTax, localTax, totalDeduction);
         }
 
-        // 렌더링
+        // 렌더링 함수들
         function renderResult(inc, ded, base, cTax, rate, barP, credit, fTax, lTax, pre, total, typeTitle) {
             document.getElementById('result-area').style.display = 'block';
             document.getElementById('tax-graph-area').style.display = 'block'; 
